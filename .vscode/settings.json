@@ -1,0 +1,9 @@
+{
+    "files.exclude": {
+        ".fseventsd": true,
+        ".Spotlight-V100": true,
+        ".TemporaryItems": true,
+        ".Trash-1000": true,
+        ".Trashes": true
+      }
+}
