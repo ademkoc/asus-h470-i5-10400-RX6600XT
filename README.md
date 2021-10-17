@@ -4,7 +4,8 @@ I will put more detail later
 
 | Specifications  |  Detail |
 |---|---|
-| Processor |Intel Core i5-10400 2.80 GHz|
+| Motherboard |ASUS H470-PLUS|
+| Processor |Intel Core i5-10400 2.90 GHz|
 | Memory | Patriot Viper Steel 8x2 GB 3200 MHz DDR4|
 | iGPU | Intel UHD Graphics 630|  
 | dGPU | Asus GT710-SL-2GD5-BRK|  
