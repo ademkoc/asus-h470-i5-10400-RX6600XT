@@ -849,7 +849,7 @@
 			<key>7C436110-AB2A-4BBB-A880-FE41995C9F82</key>
 			<dict>
 				<key>boot-args</key>
-				<string>-v alcid=7 watchdog=0 agdpmod=pikera dk.e1000=0 -revsbvmm</string>
+				<string></string>
 				<key>csr-active-config</key>
 				<data>hwcAAA==</data>
 				<key>prev-lang:kbd</key>
