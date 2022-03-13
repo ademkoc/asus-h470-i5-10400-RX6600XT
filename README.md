@@ -15,5 +15,4 @@ I will put more detail later
 
 ## Screenshots
 
-![](./images/ss1.png)
-![](./images/ss2.png)
+![](./images/ss.png)
