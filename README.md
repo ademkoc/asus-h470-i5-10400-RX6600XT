@@ -1,4 +1,4 @@
-# OpenCore 0.7.9 | macOS Monterey 12.2.1 (21D62)
+# OpenCore 0.8.2 | macOS Monterey 12.4 (21F79)
 
 I will put more detail later
 
