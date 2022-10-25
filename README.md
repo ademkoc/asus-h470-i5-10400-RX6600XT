@@ -1,18 +1,34 @@
-# OpenCore 0.8.2 | macOS Monterey 12.4 (21F79)
+# OpenCore 0.8.5 | macOS Ventura 13.0 (22A380)
 
-I will put more detail later
+I followed [Dortania's OpenCore Install Guide](https://dortania.github.io/OpenCore-Install-Guide/prerequisites.html) during the installation.
 
-| Specifications  |  Detail |
-|---|---|
-| Motherboard | ASUS PRIME H470-PLUS |
-| Processor | Intel Core i5-10400 2.90 GHz |
-| Memory | Patriot Viper Steel 8x2 GB 3200 MHz DDR4 |
-| iGPU | Intel UHD Graphics 630|
-| dGPU | Sapphire Pulse Radeon RX 6600 XT |
-| Storage | 500GB SSD + 1TB HDD |
-| Sound Card | ALC 887 |
-| Network Card | BCM94360NG |
+
+What's not working?
+
+- DRM is broken on Safari
+
+What' working?
+
+- Bluetooth
+- AirDrop
+- FaceTime
+- Metal support
+- Sleep
+- HDMI audio
+
+| Specifications | Detail                                   |
+| -------------- | ---------------------------------------- |
+| Motherboard    | ASUS PRIME H470-PLUS                     |
+| Processor      | Intel Core i5-10400 2.90 GHz             |
+| Memory         | Patriot Viper Steel 8x2 GB 3200 MHz DDR4 |
+| iGPU           | Intel UHD Graphics 630                   |
+| dGPU           | Sapphire Pulse Radeon RX 6600 XT         |
+| Storage        | 500GB SSD + 1TB HDD                      |
+| Sound Card     | ALC 887                                  |
+| Network Card   | BCM94360NG                               |
+
+PS. If you are planning to upgrade GPU, don't forget to reset the bios.
 
 ## Screenshots
 
-![](./images/ss.png)
+![](./images/ss_ventura.png)
