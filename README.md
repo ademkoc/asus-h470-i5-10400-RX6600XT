@@ -1,4 +1,4 @@
-# OpenCore 0.8.5 | macOS Ventura 13.0 (22A380)
+# OpenCore 0.9.1 | macOS Ventura 13.3.1 (22E261)
 
 I followed [Dortania's OpenCore Install Guide](https://dortania.github.io/OpenCore-Install-Guide/prerequisites.html) during the installation.
 
