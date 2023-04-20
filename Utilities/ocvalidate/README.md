@@ -16,7 +16,7 @@ Utility to validate whether a `config.plist` matches requirements and convention
 ### Global Rules
 - All entries must be set once only. Duplication is strictly prohibited.
 - All strings (fields with plist `String` format) throughout the whole config only accept ASCII printable characters at most. Stricter rules may apply. For instance, some fields only accept specified values, as indicated in [Configuration.pdf](https://github.com/acidanthera/OpenCorePkg/blob/master/Docs/Configuration.pdf).
-- All the paths relative to OpenCore root must be 128 bytes total including '\0' terminator.
+- All the paths relative to OpenCore root must be less than or equal to 128 bytes (`OC_STORAGE_SAFE_PATH_MAX`) in total including '\0' terminator.
 - Most binary patches must have `Find`, `Replace`, `Mask` (if used), and `ReplaceMask` (if used) identical size set. Also, `Find` requires `Mask` (or `Replace` requires `ReplaceMask`) to be active (set to non-zero) for corresponding bits.
 - `MinKernel` and `MaxKernel` entries should follow conventions specified in [Configuration.pdf](https://github.com/acidanthera/OpenCorePkg/blob/master/Docs/Configuration.pdf). (TODO: Bring decent checks for this)
 - `MinKernel` cannot be a value that is below macOS 10.4 (Darwin version 8).
@@ -40,6 +40,7 @@ Utility to validate whether a `config.plist` matches requirements and convention
 - When `AllowRelocationBlock` is enabled, `ProvideCustomSlide` should be enabled altogether.
 - When `EnableSafeModeSlide` is enabled, `ProvideCustomSlide` should be enabled altogether.
 - If `ProvideMaxSlide` is set to a number greater than zero, `ProvideCustomSlide` should be enabled altogether.
+- `ResizeAppleGpuBars` must be set to `0` or `-1`.
 - When `DisableVariableWrite`, `EnableWriteUnprotector`, or `ProvideCustomSlide` is enabled, `OpenRuntime.efi` should be loaded in `UEFI->Drivers`.
 
 ### DeviceProperties
@@ -51,6 +52,7 @@ Utility to validate whether a `config.plist` matches requirements and convention
 - Entry[N]->BundlePath: Filename should have `.kext` suffix.
 - Entry[N]->PlistPath: Filename should have `.plist` suffix.
 - Entry[N]: If `Lilu.kext` is used, `DisableLinkeditJettison` should be enabled in `Kernel->Quirks`.
+- `BrcmFirmwareRepo.kext` must not be injected by OpenCore.
 - For some known kexts, their `BundlePath`, `ExecutablePath`, and `PlistPath` must match against each other. Current list of rules can be found [here](https://github.com/acidanthera/OpenCorePkg/blob/master/Utilities/ocvalidate/KextInfo.c).
 - Plugin kext must be placed after parent kext. For example, [plugins of Lilu](https://github.com/acidanthera/Lilu/blob/master/KnownPlugins.md) must be placed after `Lilu.kext`.
 #### Delete
@@ -70,13 +72,19 @@ Utility to validate whether a `config.plist` matches requirements and convention
 - HibernateMode: Only `None`, `Auto`, `RTC`, or `NVRAM` are accepted.
 - PickerMode: Only `Builtin`, `External`, or `Apple` are accepted.
 - `PickerAudioAssist` requires `AudioSupport` in `UEFI->Audio` to be enabled.
-- LauncherOption: Only `Disabled`, `Full`, or `Short` are accepted.
+- LauncherOption: Only `Disabled`, `Full`, `Short`, or `System` are accepted.
 - `LauncherPath` cannot be empty string.
 #### Security
 - AuthRestart: If enabled, `VirtualSMC.kext` should be present in `Kernel->Add`.
 - DmgLoading: Only `Disabled`, `Signed`, or `Any` are accepted.
 - Vault: Only `Optional`, `Basic`, or `Secure` are accepted.
 - SecureBootModel: Only `Default`, `Disabled`, `j137`, `j680`, `j132`, `j174`, `j140k`, `j780`, `j213`, `j140a`, `j152f`, `j160`, `j230k`, `j214k`, `j223`, `j215`, `j185`, `j185f`, or `x86legacy` are accepted.
+#### Serial
+- RegisterAccessWidth: Only `8` or `32` are accepted.
+- BaudRate: Only `921600`, `460800`, `230400`, `115200`, `57600`, `38400`, `19200`, `9600`, `7200`, `4800`, `3600`, `2400`, `2000`, `1800`, `1200`, `600`, `300`, `150`, `134`, `110`, `75`, or `50` are accepted.
+- PciDeviceInfo: The last byte must be `0xFF`.
+- PciDeviceInfo: Excluding the last byte `0xFF`, the rest must be divisible by 4.
+- PciDeviceInfo: Maximum allowed size is 41.
 
 ### NVRAM
 - Requirements here all follow Global Rules. In addition, the following keys and values are checked:
@@ -107,20 +115,26 @@ Utility to validate whether a `config.plist` matches requirements and convention
 #### APFS
 - When `EnableJumpstart` is enabled, `ScanPolicy` in `Misc->Security` should have `OC_SCAN_ALLOW_FS_APFS` (bit 8) set, together with `OC_SCAN_FILE_SYSTEM_LOCK` (bit 0) set. Or `ScanPolicy` should be `0` (failsafe value).
 #### Audio
-- When `AudioSupport` is enabled, AudioDevice cannot be empty and must be a valid path.
+- When `AudioSupport` is enabled, `AudioDevice` must be either empty or a valid path.
+- When `AudioSupport` is enabled, `AudioOutMask` must be non-zero.
 #### Quirks
 - When `RequestBootVarRouting` is enabled, `OpenRuntime.efi` should be loaded in `UEFI->Drivers`.
+- `ResizeGpuBars` must be set to an integer value between `-1` and `19`.
 #### Drivers
 - When `OpenUsbKbDxe.efi` is in use, `KeySupport` in `UEFI->Input` should never be enabled altogether.
 - When `Ps2KeyboardDxe.efi` is in use, `KeySupport` in `UEFI->Input` should always be enabled altogether.
 - `OpenUsbKbDxe.efi` and `Ps2KeyboardDxe.efi` should never co-exist.
 - When HFS+ filesystem driver or `AudioDxe.efi` is in use, `ConnectDrivers` should be enabled altogether.
 - When `OpenCanopy.efi` is in use, `PickerMode` in `Misc->Boot` should be set to `External`.
+- When `OpenVariableRuntimeDxe.efi` is in use, its `LoadEarly` option must be set to `TRUE`.
+- `OpenRuntime.efi` must be placed after `OpenVariableRuntimeDxe.efi` when both are in use.
+- `LoadEarly` for any other driver but `OpenVariableRuntimeDxe.efi` and `OpenRuntime.efi` must be set to `FALSE`.
 #### Input
 - KeySupportMode: Only `Auto`, `V1`, `V2`, or `AMI` are accepted.
 - When `PointerSupport` is enabled, the value of `PointerSupportMode` should only be `ASUS`.
 #### Output
 - `ClearScreenOnModeSwitch`, `IgnoreTextInGraphics`, `ReplaceTabWithSpace`, and `SanitiseClearScreen` only apply to `System` TextRenderer
 - `Resolution` should match `NUMBERxNUMBER` or `NUMBERxNUMBER@NUMBER` sequences (unless it is an `Empty string` or is set to `Max`).
+- `UIScale` must be set to an integer value between `-1` and `2`.
 #### ReservedMemory
 - Type: Only `Reserved`, `LoaderCode`, `LoaderData`, `BootServiceCode`, `BootServiceData`, `RuntimeCode`, `RuntimeData`, `Available`, `Persistent`, `UnusableMemory`, `ACPIReclaimMemory`, `ACPIMemoryNVS`, `MemoryMappedIO`, `MemoryMappedIOPortSpace`, or `PalCode` are accepted.
