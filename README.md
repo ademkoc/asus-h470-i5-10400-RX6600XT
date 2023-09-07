@@ -1,7 +1,6 @@
-# OpenCore 0.9.3 | macOS Ventura 13.4.1 (22F82)
+# OpenCore 0.9.4 | macOS Ventura 13.5.1 (22G90)
 
 I followed [Dortania's OpenCore Install Guide](https://dortania.github.io/OpenCore-Install-Guide/prerequisites.html) during the installation.
-
 
 What's not working?
 
@@ -25,7 +24,7 @@ What' working?
 | dGPU           | Sapphire Pulse Radeon RX 6600 XT         |
 | Storage        | 500GB SSD + 1TB HDD                      |
 | Sound Card     | ALC 887                                  |
-| Network Card   | BCM94360NG                               |
+| Network Card   | BCM94360NG + Eightwood WiFi Antenna      |
 
 PS. If you are planning to upgrade GPU, don't forget to reset the bios.
 
